@@ -1,8 +1,9 @@
 import path from "path";
-import { BrowserWindow, shell } from "electron";
+import { shell } from "electron";
 
 import { createWindow, isDev } from "@main/utils";
 
+import controller from "./controller";
 import Controller from "./controller";
 
 /**
@@ -27,13 +28,7 @@ const startup = () => {
 
   window.once("ready-to-show", () => {
     window.show();
-
-    const controller = new Controller({
-      port: "COM3", // Would be nice to auto detect
-      baudRate: 9600,
-    });
-
-    controller.connect();
+    const controller = new Controller();
 
     // start serial process
     window.once("close", async () => {

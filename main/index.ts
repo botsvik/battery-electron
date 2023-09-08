@@ -25,9 +25,3 @@ app.on("activate", () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) startup();
 });
-
-// listen the channel `message` and resend the received message to the renderer process
-ipcMain.on("message", (event: IpcMainEvent, message: any) => {
-  console.log(message);
-  setTimeout(() => event.sender.send("message", "hi from electron"), 500);
-});

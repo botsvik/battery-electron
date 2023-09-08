@@ -1,35 +1,43 @@
+import { ipcMain } from "electron";
+
 export type Mode = "idle" | "charge" | "discharge";
 
-export type ControllerOptions = {
-  port: string;
-  baudRate: number;
-  readInterval?: number;
-  minCharge?: number;
-  maxCharge?: number;
-};
+export interface ControllerInterface {
+  connect(port: string, baudRate?: number): Promise<void>;
+  disconnect(): Promise<void>;
+  setMode(mode: Mode): Promise<void>;
+  setMinCharge(minCharge: number): Promise<void>;
+  setMaxCharge(maxCharge: number): Promise<void>;
+}
 
-class Controller {
-  private readonly _port: string;
-  private readonly _baudRate: number;
+class Controller implements ControllerInterface {
+  private _serial: string = ""; // serialport setup
+
   private _readInterval: number = 200;
   private _mode: Mode = "idle";
   private _minCharge: number = 200;
   private _maxCharge: number = 1000;
 
-  constructor(options: ControllerOptions) {
-    this._port = options.port;
-    this._baudRate = options.baudRate;
-    if (options.readInterval) this._readInterval = options.readInterval;
-    if (options.minCharge !== undefined) this._minCharge = options.minCharge;
-    if (options.maxCharge !== undefined) this._maxCharge = options.maxCharge;
+  constructor() {
+    ipcMain.handle("controller:connect", async (_, ...args) => {
+      return await this.connect(args[0], args[1]);
+    });
+    ipcMain.handle("controller:disconnect", async () => {
+      return await this.disconnect();
+    });
+    ipcMain.handle("controller:setMode", async (_, ...args) => {
+      return await this.setMode(args[0]);
+    });
   }
 
   get port() {
-    return this._port;
+    // return this._port;
+    return "COM3";
   }
 
   get baudRate() {
-    return this._baudRate;
+    // return this._baudRate;
+    return 9600;
   }
 
   get readInterval() {
@@ -48,13 +56,14 @@ class Controller {
     return this._maxCharge;
   }
 
-  async connect() {
+  async connect(port: string, baudRate = 9600) {
     // connect to serial
+    console.log(`Connected on port:${port} baudRate:${baudRate}`);
   }
 
   async disconnect() {
-    console.log("DISCONNECTED");
     // disconnect
+    console.log("Disconnected");
   }
 
   async setMode(mode: Mode) {
@@ -62,14 +71,18 @@ class Controller {
     // send W command to mode pin
   }
 
-  setMinCharge(minCharge: number) {
+  async setMinCharge(minCharge: number) {
     this._minCharge = minCharge;
     //
   }
 
-  setMaxCharge(maxCharge: number) {
+  async setMaxCharge(maxCharge: number) {
     this._maxCharge = maxCharge;
     //
+  }
+
+  async start() {
+    // Start read process
   }
 }
 
