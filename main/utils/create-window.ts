@@ -44,7 +44,11 @@ const createWindow = (
     ...options,
   });
 
-  window.on("move", () => {
+  window.on("resized", () => {
+    store.set(STORE_KEY, getWindowRect(window));
+  });
+
+  window.on("moved", () => {
     store.set(STORE_KEY, getWindowRect(window));
   });
 
