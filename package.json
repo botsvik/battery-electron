@@ -3,23 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build-renderer": "next build renderer",
+    "build-main": "tspc --project ./main/tsconfig.json",
+    "build": "yarn build-renderer && yarn build-main",
+    "dev-renderer": "next dev renderer -p 8080",
+    "dev-main": "yarn build-main && cross-env NODE_ENV=\"development\" electron ./build/main/index.js",
+    "dev": "concurrently \"yarn dev-renderer\" \"yarn dev-main\" -n renderer,main -k",
+    "start": "cross-env NODE_ENV=\"production\" electron ./build/main/index.js"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.1.10",
+    "electron-serve": "^1.1.0",
+    "electron-store": "^8.1.0",
+    "framer-motion": "^10.16.4",
+    "next": "13.4.19",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "add": "^2.0.6",
     "autoprefixer": "10.4.15",
+    "concurrently": "^8.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^26.1.0",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
-    "next": "13.4.19",
     "postcss": "8.4.29",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
-    "typescript": "5.2.2"
+    "ts-patch": "^3.0.2",
+    "typescript": "5.2.2",
+    "typescript-transform-paths": "^3.4.6"
   }
 }
