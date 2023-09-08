@@ -1,1 +1,1 @@
-export { default as isDev } from "./isDev";
+export { default as isDev } from "./is-dev";
