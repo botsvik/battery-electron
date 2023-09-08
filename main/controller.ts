@@ -53,6 +53,7 @@ class Controller {
   }
 
   async disconnect() {
+    console.log("DISCONNECTED");
     // disconnect
   }
 
@@ -70,8 +71,6 @@ class Controller {
     this._maxCharge = maxCharge;
     //
   }
-
-  
 }
 
 export default Controller;

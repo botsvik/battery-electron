@@ -1,15 +1,15 @@
 import path from "path";
 import { BrowserWindow, shell } from "electron";
 
-import { isDev } from "@main/utils";
+import { createWindow, isDev } from "@main/utils";
 
 import Controller from "./controller";
 
 /**
  * Startup function
  */
-export default function () {
-  const window = new BrowserWindow({
+const startup = () => {
+  const window = createWindow("main", {
     show: false,
     autoHideMenuBar: true,
     width: 1024,
@@ -26,7 +26,6 @@ export default function () {
   });
 
   window.once("ready-to-show", () => {
-    window.maximize();
     window.show();
 
     const controller = new Controller({
@@ -37,8 +36,10 @@ export default function () {
     controller.connect();
 
     // start serial process
-    window.once("close", () => {
-      controller.disconnect();
+    window.once("close", async () => {
+      await controller.disconnect();
     });
   });
-}
+};
+
+export default startup;
