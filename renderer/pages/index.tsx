@@ -39,7 +39,7 @@ const Home: FunctionComponent = () => {
   });
 
   return (
-    <section className="bg-primary flex items-center justify-center h-screen">
+    <section className="flex items-center justify-center h-screen">
       <Card className="w-full md:max-w-md" radius="md">
         <CardBody className="gap-4">
           <h1 className="text-foreground italic font-light">

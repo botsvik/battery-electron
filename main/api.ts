@@ -62,6 +62,7 @@ class Api implements ApiInterface {
       if (this._serialport) {
         this._serialport.write("R");
         const data = this._serialport.read();
+        console.log(data);
       }
     }, this._readInterval);
   }
