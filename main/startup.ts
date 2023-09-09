@@ -3,8 +3,8 @@ import { shell } from "electron";
 
 import { createWindow, isDev } from "@main/utils";
 
-import controller from "./controller";
-import Controller from "./controller";
+import controller from "./api";
+import Controller from "./api";
 
 /**
  * Startup function

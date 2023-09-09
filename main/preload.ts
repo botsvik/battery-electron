@@ -1,17 +1,19 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-import { ControllerInterface, Mode } from "./controller";
+import { ApiInterface, Mode } from "./api";
 
-const controller: ControllerInterface = {
-  connect: async (port, baudRate) =>
-    await ipcRenderer.invoke("controller:connect", port, baudRate),
-  disconnect: async () => await ipcRenderer.invoke("controller:disconnect"),
+const api: ApiInterface = {
+  listAvailablePorts: async () =>
+    await ipcRenderer.invoke("api:listAvailablePorts"),
+  connect: async (path, baudRate) =>
+    await ipcRenderer.invoke("api:connect", path, baudRate),
+  disconnect: async () => await ipcRenderer.invoke("api:disconnect"),
   setMode: async (mode: Mode) =>
-    await ipcRenderer.invoke("controller:setMode", mode),
+    await ipcRenderer.invoke("api:setMode", mode),
   setMinCharge: async (minCharge: number) =>
-    await ipcRenderer.invoke("controller:setMinCharge", minCharge),
+    await ipcRenderer.invoke("api:setMinCharge", minCharge),
   setMaxCharge: async (maxCharge: number) =>
-    await ipcRenderer.invoke("controller:setMaxCharge", maxCharge),
+    await ipcRenderer.invoke("api:setMaxCharge", maxCharge),
 };
 
-contextBridge.exposeInMainWorld("controller", controller);
+contextBridge.exposeInMainWorld("api", api);

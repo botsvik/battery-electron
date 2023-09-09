@@ -1,7 +1,8 @@
-import { ControllerInterface } from "@main/controller";
+import { ApiInterface } from "@main/api";
+import { SerialPort } from "serialport";
 
 declare global {
   interface Window {
-    controller: ControllerInterface;
+    api: ApiInterface;
   }
 }

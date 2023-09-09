@@ -1,36 +1,106 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import { FunctionComponent, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   Input,
-  Divider,
+  Button,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { useForm, Controller } from "react-hook-form";
 
-const inter = Inter({ subsets: ["latin"] });
+const Home: FunctionComponent = () => {
+  const router = useRouter();
 
-export default function Home() {
-  const handleConnect = () => {
-    window.controller.connect("COM24", 25490);
-  };
+  const [ports, setPorts] = useState<
+    Awaited<ReturnType<typeof window.api.listAvailablePorts>>
+  >([]);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      port: "",
+      baudRate: 9600,
+    },
+  });
+
+  useEffect(() => {
+    window.api.listAvailablePorts().then((ports) => {
+      setPorts(ports);
+    });
+  }, []);
+
+  const handleConnect = handleSubmit(async ({ port, baudRate }) => {
+    setIsConnecting(true);
+    await window.api.connect(port, baudRate);
+    setIsConnecting(false);
+    router.push("/controller");
+  });
 
   return (
     <section className="bg-primary flex items-center justify-center h-screen">
       <Card className="w-full md:max-w-md" radius="md">
         <CardBody className="gap-4">
-          <h1 className="text-foreground-400 italic text-sm font-light">
+          <h1 className="text-foreground italic font-light">
             Provide details to establish a connection with a device.
           </h1>
-          <Input radius="sm" label="Port" defaultValue="COM3" isRequired />
-          <Input radius="sm" label="Baud Rate" defaultValue="9600" isRequired />
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            name="port"
+            render={({ field }) => (
+              <Select
+                isRequired
+                selectionMode="single"
+                label="Port"
+                selectedKeys={field.value ? [field.value] : []}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                radius="sm"
+                items={ports}
+              >
+                {(port) => (
+                  <SelectItem key={port.path}>
+                    {"friendlyName" in port &&
+                    typeof port.friendlyName === "string"
+                      ? port.friendlyName
+                      : port.path}
+                  </SelectItem>
+                )}
+              </Select>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="baudRate"
+            rules={{
+              required: true,
+            }}
+            render={({ field }) => (
+              <Input
+                radius="sm"
+                label="Baud Rate"
+                value={field.value.toString()}
+                onValueChange={(value) => {
+                  const number = Number(value);
+                  if (!isNaN(number)) field.onChange(number);
+                }}
+                isRequired
+              />
+            )}
+          />
+
           <Button
             size="lg"
             fullWidth
             radius="sm"
             color="primary"
+            isLoading={isConnecting}
             onClick={handleConnect}
           >
             Connect
@@ -39,4 +109,6 @@ export default function Home() {
       </Card>
     </section>
   );
-}
+};
+
+export default Home;

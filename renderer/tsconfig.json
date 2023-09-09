@@ -16,7 +16,7 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "@main/controller": ["../main/controller"]
+      "@main/api": ["../main/api"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
