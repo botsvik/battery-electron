@@ -3,14 +3,13 @@ import { shell } from "electron";
 
 import { createWindow, isDev } from "@main/utils";
 
-import controller from "./api";
-import Controller from "./api";
+import Api from "./api";
 
 /**
  * Startup function
  */
 const startup = () => {
-  const window = createWindow("main", {
+  const window = createWindow("Main", {
     show: false,
     autoHideMenuBar: true,
     width: 1024,
@@ -20,7 +19,10 @@ const startup = () => {
     },
   });
 
+  // Load renderer
   window.loadURL(isDev ? "http://localhost:8080" : "app://-");
+
+  // Disable
   window.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: "deny" };
@@ -28,11 +30,12 @@ const startup = () => {
 
   window.once("ready-to-show", () => {
     window.show();
-    const controller = new Controller();
 
-    // start serial process
+    //
+    const api = Api.getInstance();
+
     window.once("close", async () => {
-      await controller.disconnect();
+      await api.disconnect();
     });
   });
 };

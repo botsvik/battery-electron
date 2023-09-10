@@ -18,6 +18,15 @@ export interface ApiInterface {
 }
 
 class Api implements ApiInterface {
+  // Singleton pattern
+  private static instance: Api;
+  public static getInstance(): Api {
+    if (!Api.instance) {
+      Api.instance = new Api();
+    }
+    return Api.instance;
+  }
+
   private _readInterval: number = 200;
   private _mode: Mode = "idle";
   private _minCharge: number = 200;
@@ -26,7 +35,7 @@ class Api implements ApiInterface {
   private _serialport?: SerialPort;
   private _timer?: SetIntervalAsyncTimer<[]>;
 
-  constructor() {
+  private constructor() {
     ipcMain.handle(
       "api:listAvailablePorts",
       async (_event) => await this.listAvailablePorts()
