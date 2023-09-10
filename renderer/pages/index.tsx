@@ -21,7 +21,7 @@ const Home: FunctionComponent = () => {
   const { control, handleSubmit } = useForm({
     defaultValues: {
       port: "",
-      baudRate: 9600,
+      baudRate: 1000000,
     },
   });
 
