@@ -1,21 +1,12 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  Card,
-  CardBody,
-  Input,
-  Button,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Card, CardBody, Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { useForm, Controller } from "react-hook-form";
 
 const Home: FunctionComponent = () => {
   const router = useRouter();
 
-  const [ports, setPorts] = useState<
-    Awaited<ReturnType<typeof window.api.listAvailablePorts>>
-  >([]);
+  const [ports, setPorts] = useState<Awaited<ReturnType<typeof window.api.listAvailablePorts>>>([]);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const { control, handleSubmit } = useForm({
@@ -65,8 +56,7 @@ const Home: FunctionComponent = () => {
               >
                 {(port) => (
                   <SelectItem key={port.path}>
-                    {"friendlyName" in port &&
-                    typeof port.friendlyName === "string"
+                    {"friendlyName" in port && typeof port.friendlyName === "string"
                       ? port.friendlyName
                       : port.path}
                   </SelectItem>

@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { SerialPort, SerialPortMock } from "serialport";
+import { ReadlineParser, SerialPort, SerialPortMock } from "serialport";
 import {
   setIntervalAsync,
   clearIntervalAsync,
@@ -36,19 +36,10 @@ class Api implements ApiInterface {
   private _timer?: SetIntervalAsyncTimer<[]>;
 
   private constructor() {
-    ipcMain.handle(
-      "api:listAvailablePorts",
-      async (_event) => await this.listAvailablePorts()
-    );
-    ipcMain.handle(
-      "api:connect",
-      async (_event, ...args) => await this.connect(args[0], args[1])
-    );
+    ipcMain.handle("api:listAvailablePorts", async (_event) => await this.listAvailablePorts());
+    ipcMain.handle("api:connect", async (_event, ...args) => await this.connect(args[0], args[1]));
     ipcMain.handle("api:disconnect", async () => await this.disconnect());
-    ipcMain.handle(
-      "api:setMode",
-      async (_event, ...args) => await this.setMode(args[0])
-    );
+    ipcMain.handle("api:setMode", async (_event, ...args) => await this.setMode(args[0]));
   }
 
   async listAvailablePorts() {
@@ -66,14 +57,20 @@ class Api implements ApiInterface {
       await this.disconnect();
     });
 
+    const parser = new ReadlineParser();
+    this._serialport.pipe(parser);
+    parser.on("data", console.log);
+
+    // this._serialport.on("data", console.log);
+
     // We can either send read commands or listen to device output by this._serialport.on("data", handler);
-    this._timer = setIntervalAsync(async () => {
-      if (this._serialport) {
-        this._serialport.write("R");
-        const data = this._serialport.read();
-        console.log(data);
-      }
-    }, this._readInterval);
+    // this._timer = setIntervalAsync(async () => {
+    //   if (this._serialport) {
+    //     this._serialport.write("R");
+    //     const data = this._serialport.read();
+    //     console.log(data);
+    //   }
+    // }, this._readInterval);
   }
 
   async disconnect() {

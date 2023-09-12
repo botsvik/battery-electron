@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.vue": "vue",
+    "*.ino-bak": "cpp"
+  }
+}

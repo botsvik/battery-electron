@@ -137,3 +137,4 @@ float readChannel(ADS1115_MUX channel)
   voltage = adc.getResult_V(); // alternative: getResult_mV for Millivolt
   return voltage;
 }
+

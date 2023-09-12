@@ -1,9 +1,4 @@
-import {
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  Rectangle,
-  screen,
-} from "electron";
+import { BrowserWindow, BrowserWindowConstructorOptions, Rectangle, screen } from "electron";
 import Store from "electron-store";
 
 import getWindowRect from "./get-window-rect";
@@ -13,10 +8,7 @@ const WINDOW_RECT_KEY = "WindowRect";
 const DEFAULT_WIDTH = 1024;
 const DEFAULT_HEIGHT = 728;
 
-const createWindow = (
-  name: string,
-  options: BrowserWindowConstructorOptions
-) => {
+const createWindow = (name: string, options: BrowserWindowConstructorOptions) => {
   const key = WINDOW_RECT_KEY + "." + name;
 
   if (!options.width) options.width = DEFAULT_WIDTH;
@@ -33,7 +25,7 @@ const createWindow = (
           state.x >= bounds.x &&
           state.y >= bounds.y &&
           state.x + state.width <= bounds.x + bounds.width &&
-          state.y + state.height <= bounds.y + bounds.height
+          state.y + state.height <= bounds.y + bounds.height,
       );
 
     if (!visible) {

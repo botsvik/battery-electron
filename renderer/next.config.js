@@ -5,5 +5,5 @@ module.exports = {
   images: {
     unoptimized: true,
   },
-  distDir: "../build/renderer"
+  distDir: "../build/renderer",
 };
