@@ -20,7 +20,10 @@
 #define COMMAND_READ 0
 #define COMMAND_WRITE 1
 
-#define MULTIPLEXER_PIN 14
+#define SPARE_PIN_0 13
+#define SPARE_PIN_1 14
+#define SPARE_PIN_2 15
+
 #define COUNTER_PIN_0 16
 #define COUNTER_PIN_1 17
 #define COUNTER_PIN_2 18
@@ -51,10 +54,6 @@ float measureVoltage(ADS1115_MUX channel)
 void setup()
 {
   // set particular pins as outputs
-  // pinMode(13, OUTPUT); // heart bit generator
-  pinMode(MULTIPLEXER_PIN, OUTPUT);
-  pinMode(15, OUTPUT); // Spare
-
   pinMode(COUNTER_PIN_0, OUTPUT);
   pinMode(COUNTER_PIN_1, OUTPUT);
   pinMode(COUNTER_PIN_2, OUTPUT);
@@ -70,7 +69,6 @@ void setup()
 
   Wire.begin();
   Wire.setClock(WIRE_CLOCK);
-  Serial.setTimeout(500); // set new value to 1 milliseconds
   Serial.begin(BAUD_RATE);
 }
 
@@ -103,14 +101,28 @@ void read(byte input)
     digitalWrite(COUNTER_PIN_2, (i & 0b0100) >> 2);
     digitalWrite(COUNTER_PIN_3, (i & 0b1000) >> 3);
 
+#if NUMBER_OF_VOLTAGE_CHANNELS > 0
     voltages[i] = measureVoltage(ADS1115_COMP_0_GND);
+#endif
+#if NUMBER_OF_VOLTAGE_CHANNELS > 1
     voltages[i + 16] = measureVoltage(ADS1115_COMP_1_GND);
+#endif
+#if NUMBER_OF_VOLTAGE_CHANNELS > 2
     voltages[i + 32] = measureVoltage(ADS1115_COMP_2_GND);
+#endif
+#if NUMBER_OF_VOLTAGE_CHANNELS > 3
+    voltages[i + 48] = measureVoltage(ADS1115_COMP_3_GND);
+#endif
   }
 
   for (byte i = 0; i < numberOfVoltages; i++)
   {
-    Serial.write(voltages[i]); // float is 4 bytes
+    float f = voltages[i];
+    byte *b = (byte *)&f;
+    Serial.write(b[0]);
+    Serial.write(b[1]);
+    Serial.write(b[2]);
+    Serial.write(b[3]);
   }
 }
 
