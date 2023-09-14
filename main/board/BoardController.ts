@@ -26,17 +26,18 @@ export class BoardController {
 
   async connect(port: string, baudRate = 9600) {
     this._board = await Board.create(port, baudRate);
-    this._timer = setIntervalAsync(async () => {
-      if (this._board) {
-        console.log("waiting for voltages");
-        try {
-          this._voltages = await this._board.read();
-          this._notify();
-        } catch (e) {
-          if (e instanceof Error) console.log(e.message);
-        }
-      }
-    }, this._readInterval);
+    
+    // this._timer = setIntervalAsync(async () => {
+    //   if (this._board) {
+    //     console.log("waiting for voltages");
+    //     try {
+    //       this._voltages = await this._board.read();
+    //       this._notify();
+    //     } catch (e) {
+    //       if (e instanceof Error) console.log(e.message);
+    //     }
+    //   }
+    // }, this._readInterval);
   }
 
   async disconnect() {

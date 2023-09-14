@@ -1,7 +1,7 @@
 import { BrowserWindow, BrowserWindowConstructorOptions, Rectangle, screen } from "electron";
 import Store from "electron-store";
 
-import getWindowRect from "./get-window-rect";
+import getWindowRect from "./getWindowRect";
 
 const STORE_NAME = "BatteryAppStore";
 const WINDOW_RECT_KEY = "WindowRect";

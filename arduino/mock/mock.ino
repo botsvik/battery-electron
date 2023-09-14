@@ -23,6 +23,7 @@
 #define NUMBER_OF_VOLTAGES_PER_CHANNEL 16
 #define NUMBER_OF_VOLTAGE_CHANNELS 4
 #define VOLTAGE_MULTIPLIER 1
+#define VOLTAGE_COEFFICIENT 0.0048875855327468 // 5 / 1023
 
 #define FRAME_START 0xfd
 #define FRAME_ESCAPE 0xfe
@@ -35,7 +36,7 @@ boolean ready = false;
 
 float measureVoltage(byte pin)
 {
-  return float(analogRead(pin) * VOLTAGE_MULTIPLIER); // use getResult_mV for millivolts
+  return analogRead(pin) * VOLTAGE_COEFFICIENT * VOLTAGE_MULTIPLIER; // use getResult_mV for millivolts
 }
 
 void setup()
