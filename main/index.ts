@@ -9,6 +9,7 @@ import { BoardController } from "./board";
 if (!isDev) serve({ directory: path.join(__dirname, "../renderer") });
 
 const controller = new BoardController();
+
 const openMainWindow = () => {
   const window = createWindow("Main", {
     title: "Battery App",
@@ -16,6 +17,8 @@ const openMainWindow = () => {
     autoHideMenuBar: true,
     width: 1024,
     height: 728,
+    minWidth: 800,
+    minHeight: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -69,3 +72,4 @@ ipcMain.handle(
   async (_, ...[port, baudRate]) => await controller.connect(port, baudRate),
 );
 ipcMain.handle("controller:disconnect", async () => await controller.disconnect());
+ipcMain.handle("controller:setMode", async (_, ...[mode]) => await controller.setMode(mode));

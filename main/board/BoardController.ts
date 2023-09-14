@@ -14,7 +14,7 @@ export class BoardController {
   private _board?: Board;
 
   private _chargingMode: ChargingMode = "idle";
-  private _readInterval: number = 200;
+  private _readInterval: number = 5000;
   private _minCharge: number = 200;
   private _maxCharge: number = 1000;
   private _subscriberKey = 0;
@@ -26,18 +26,18 @@ export class BoardController {
 
   async connect(port: string, baudRate = 9600) {
     this._board = await Board.create(port, baudRate);
-    
-    // this._timer = setIntervalAsync(async () => {
-    //   if (this._board) {
-    //     console.log("waiting for voltages");
-    //     try {
-    //       this._voltages = await this._board.read();
-    //       this._notify();
-    //     } catch (e) {
-    //       if (e instanceof Error) console.log(e.message);
-    //     }
-    //   }
-    // }, this._readInterval);
+
+    this._timer = setIntervalAsync(async () => {
+      if (this._board) {
+        console.log("waiting for voltages");
+        try {
+          this._voltages = await this._board.read();
+          this._notify();
+        } catch (e) {
+          if (e instanceof Error) console.log(e.message);
+        }
+      }
+    }, this._readInterval);
   }
 
   async disconnect() {
@@ -49,6 +49,12 @@ export class BoardController {
 
   async setMode(mode: ChargingMode) {
     this._chargingMode = mode;
+    if (mode === "charge") {
+      this._board?.write(13, "high");
+    }
+    if (mode === "idle") {
+      this._board?.write(13, "low");
+    }
   }
 
   async setMinCharge(minCharge: number) {

@@ -31,7 +31,6 @@
 
 #define READY_BYTE 0b10101010
 
-
 boolean ready = false;
 
 float measureVoltage(byte pin)
@@ -48,6 +47,7 @@ void setup()
   pinMode(COUNTER_PIN_3, OUTPUT);
 
   pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
 
   Serial.begin(BAUD_RATE);
 }
