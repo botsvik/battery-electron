@@ -1,6 +1,5 @@
 import { ReadyParser, SerialPort } from "serialport";
 import _chunk from "lodash/chunk";
-import { sleep } from "@main/utils";
 
 const FRAME_START = 0xfd;
 const FRAME_ESCAPE = 0xfe;
@@ -11,6 +10,9 @@ const COMMAND_READ = 0b00000000;
 const COMMAND_WRITE = 0b10000000;
 
 export class Board {
+  private readonly _serialport: SerialPort;
+  private _busy = false;
+
   static async create(port: string, baudRate = 9600) {
     return new Promise<Board>(async (resolve) => {
       const serialport = new SerialPort({ path: port, baudRate });
@@ -27,10 +29,16 @@ export class Board {
     });
   }
 
-  private _busy = false;
+  private constructor(serialport: SerialPort) {
+    this._serialport = serialport;
+  }
 
-  private constructor(private readonly _serialport: SerialPort) {}
-
+  /**
+   * Read the voltage data
+   *
+   * @param timeout
+   * @returns
+   */
   async read(timeout = 2000) {
     if (this._busy) {
       throw new Error(
@@ -102,6 +110,7 @@ export class Board {
         if (error) reject(error);
       });
 
+      // Create timeout to reject the promise if no frame end byte has been received after `timeout` milliseconds
       let timer = setTimeout(() => {
         this._serialport.removeListener("data", handler);
         reject(new Error("Waited for serial data for too long"));
@@ -110,6 +119,12 @@ export class Board {
     });
   }
 
+  /**
+   * Set pin to high or low
+   *
+   * @param pin
+   * @param value
+   */
   async write(pin: number, value: "high" | "low") {
     pin = (pin & 0b00111111) << 1;
     this._serialport.write([COMMAND_WRITE | pin | (value === "high" ? 0b1 : 0b0)], "binary");
