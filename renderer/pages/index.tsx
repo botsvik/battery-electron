@@ -6,25 +6,27 @@ import { useForm, Controller } from "react-hook-form";
 const Home: FunctionComponent = () => {
   const router = useRouter();
 
-  const [ports, setPorts] = useState<Awaited<ReturnType<typeof window.api.listAvailablePorts>>>([]);
+  const [ports, setPorts] = useState<
+    Awaited<ReturnType<typeof window.window.backend.serialport.list>>
+  >([]);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      port: "",
-      baudRate: 1000000,
+      port: "COM4",
+      baudRate: 57600,
     },
   });
 
   useEffect(() => {
-    window.api.listAvailablePorts().then((ports) => {
+    window.backend.serialport.list().then((ports) => {
       setPorts(ports);
     });
   }, []);
 
   const handleConnect = handleSubmit(async ({ port, baudRate }) => {
     setIsConnecting(true);
-    await window.api.connect(port, baudRate);
+    await window.backend.controller.connect(port, baudRate);
     setIsConnecting(false);
     router.push("/controller");
   });

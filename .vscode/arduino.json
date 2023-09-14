@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "arduino/arduino.ino",
+    "sketch": "arduino\\mock\\mock.ino",
     "output": "./build/arduino",
-    "port": "COM3"
+    "port": "COM4"
 }

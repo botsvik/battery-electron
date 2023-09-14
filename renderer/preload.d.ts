@@ -1,8 +1,7 @@
-import { ApiInterface } from "@main/api";
-import { SerialPort } from "serialport";
+import { Backend } from "@main/preload";
 
 declare global {
   interface Window {
-    api: ApiInterface;
+    backend: Backend;
   }
 }

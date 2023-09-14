@@ -29,11 +29,20 @@
 #define COUNTER_PIN_2 18
 #define COUNTER_PIN_3 19
 
-#define VOLTAGE_MULTIPLIER 5
 #define NUMBER_OF_VOLTAGES_PER_CHANNEL 16
 #define NUMBER_OF_VOLTAGE_CHANNELS 3
+#define VOLTAGE_MULTIPLIER 5
 
+#define FRAME_START 0xfd
+#define FRAME_ESCAPE 0xfe
+#define FRAME_END 0xff
+
+#define READY_BYTE 0b10101010
+
+
+bool ready = false;
 ADS1115_WE adc = ADS1115_WE(I2C_ADDRESS);
+
 
 bool isPinWritable(byte pin)
 {
@@ -74,6 +83,12 @@ void setup()
 
 void loop()
 {
+  if (!ready)
+  {
+    Serial.write(READY_BYTE);
+    ready = true;
+  }
+
   if (Serial.available() > 0)
   {
     byte input = Serial.read();
@@ -115,15 +130,23 @@ void read(byte input)
 #endif
   }
 
+  Serial.write(FRAME_START);
   for (byte i = 0; i < numberOfVoltages; i++)
   {
-    float f = voltages[i];
-    byte *b = (byte *)&f;
-    Serial.write(b[0]);
-    Serial.write(b[1]);
-    Serial.write(b[2]);
-    Serial.write(b[3]);
+    float voltage = voltages[i];
+    byte *bytes = (byte *)&voltage;
+
+    for (byte j = 0; j < 4; j++)
+    {
+      byte quartal = bytes[j];
+      if (quartal == FRAME_START || quartal == FRAME_ESCAPE || quartal == FRAME_END)
+      {
+        Serial.write(FRAME_ESCAPE);
+      }
+      Serial.write(quartal);
+    }
   }
+  Serial.write(FRAME_END);
 }
 
 void write(byte input)

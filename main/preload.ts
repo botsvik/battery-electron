@@ -1,16 +1,36 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { IpcRendererEvent, contextBridge, ipcRenderer } from "electron";
+import { PortInfo } from "@serialport/bindings-interface";
 
-import { ApiInterface, Mode } from "./api";
+import { ChargingMode } from "@main/board";
 
-const api: ApiInterface = {
-  listAvailablePorts: async () => await ipcRenderer.invoke("api:listAvailablePorts"),
-  connect: async (path, baudRate) => await ipcRenderer.invoke("api:connect", path, baudRate),
-  disconnect: async () => await ipcRenderer.invoke("api:disconnect"),
-  setMode: async (mode: Mode) => await ipcRenderer.invoke("api:setMode", mode),
+const controller = {
+  connect: async (port: string, baudRate: number) =>
+    (await ipcRenderer.invoke("controller:connect", port, baudRate)) as void,
+  disconnect: async () => (await ipcRenderer.invoke("controller:disconnect")) as void,
+  setMode: async (mode: ChargingMode) =>
+    (await ipcRenderer.invoke("controller:setMode", mode)) as void,
   setMinCharge: async (minCharge: number) =>
-    await ipcRenderer.invoke("api:setMinCharge", minCharge),
+    (await ipcRenderer.invoke("controller:setMinCharge", minCharge)) as void,
   setMaxCharge: async (maxCharge: number) =>
-    await ipcRenderer.invoke("api:setMaxCharge", maxCharge),
+    (await ipcRenderer.invoke("controller:setMaxCharge", maxCharge)) as void,
+  handleVoltageUpdate: (fn: (voltages: number[]) => void) => {
+    const handler = (event: IpcRendererEvent, voltages: number[]) => fn(voltages);
+    const unsubscribe = () =>
+      ipcRenderer.off("controller:voltagesUpdated", handler) as unknown as void;
+    ipcRenderer.on("controller:voltagesUpdated", handler);
+    return unsubscribe;
+  },
 };
 
-contextBridge.exposeInMainWorld("api", api);
+const serialport = {
+  list: async () => (await ipcRenderer.invoke("serialport:list")) as Promise<PortInfo[]>,
+};
+
+const backend = {
+  controller,
+  serialport,
+};
+
+contextBridge.exposeInMainWorld("backend", backend);
+
+export type Backend = typeof backend;
