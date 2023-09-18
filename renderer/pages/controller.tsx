@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
+
 import {
   createChart,
   LineStyle,
@@ -7,12 +7,63 @@ import {
   ColorType,
   UTCTimestamp,
   ISeriesApi,
+  IPriceLine,
 } from "lightweight-charts";
 
 const colors = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-  28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 40,
-  41, 42, 43, 44, 45, 46, 47, 48, 49,
+  "#ef4444", // red-500
+  "#f97316", // orange-500
+  "#f59e0b", // amber-500
+  "#eab308", // yellow-500
+  "#84cc16", // lime-500
+  "#22c55e", // green-500
+  "#10b981", // emerald-500
+  "#14b8a6", // teal-500
+  "#06b6d4", // cyan-500
+  "#0ea5e9", // sky-500
+  "#3b82f6", // blue-500
+  "#6366f1", // indigo-500
+  "#8b5cf6", // violet-500
+  "#a855f7", // purple-500
+  "#d946ef", // fuchsia-500
+  "#ec4899", // pink-500
+  "#f43f5e", // rose-500
+
+  "#fca5a5", // red-300
+  "#fdba74", // orange-300
+  "#fcd34d", // amber-300
+  "#fde047", // yellow-300
+  "#bef264", // lime-300
+  "#86efac", // green-300
+  "#6ee7b7", // emerald-300
+  "#5eead4", // teal-300
+  "#67e8f9", // cyan-300
+  "#7dd3fc", // sky-300
+  "#93c5fd", // blue-300
+  "#a5b4fc", // indigo-300
+  "#c4b5fd", // violet-300
+  "#d8b4fe", // purple-300
+  "#f5d0fe", // fuchsia-300
+  "#f9a8d4", // pink-300
+  "#fda4af", // rose-300
+
+  "#b91c1c", // red-700
+  "#c2410c", // orange-700
+  "#b45309", // amber-700
+  "#b45309", // yellow-700
+  "#4d7c0f", // lime-700
+  "#15803d", // green-700
+  "#047857", // emerald-700
+  "#0f766e", // teal-700
+  "#0e7490", // cyan-700
+  "#0369a1", // sky-700
+  "#1d4ed8", // blue-700
+  "#4338ca", // indigo-700
+  "#6d28d9", // violet-700
+  "#7e22ce", // purple-700
+  "#a21caf", // fuchsia-700
+  "#be185d", // pink-700
+  "#be123c", // rose-700
 ];
 
 const mountLineChart = () => {
@@ -22,6 +73,12 @@ const mountLineChart = () => {
     layout: {
       textColor: "black",
       background: { type: ColorType.Solid, color: "white" },
+    },
+    rightPriceScale: {
+      scaleMargins: {
+        top: 0.2,
+        bottom: 0,
+      },
     },
     timeScale: {
       // fixLeftEdge: true,
@@ -38,6 +95,8 @@ const mountLineChart = () => {
   };
   window.addEventListener("resize", resizeHandler);
 
+  let maxPriceLine: IPriceLine;
+  let minPriceLine: IPriceLine;
   const lines: ISeriesApi<"Line">[] = [];
 
   const unsubscribe = window.backend.controller.handleVoltageUpdate((voltages) => {
@@ -47,14 +106,13 @@ const mountLineChart = () => {
       let line = lines[index];
       if (!line) {
         line = chart.addLineSeries({
-          baseLineColor: "red",
           lastValueVisible: false,
-          crosshairMarkerVisible: false,
-          priceLineVisible: false,
-          lineType: 1,
-          lineWidth: 1,
           // crosshairMarkerVisible: false,
-          color: "blue",
+          crosshairMarkerBorderWidth: 0,
+          priceLineVisible: false,
+          lineType: 0,
+          lineWidth: 1,
+          color: colors[index],
           autoscaleInfoProvider: () => {
             return {
               margins: {
@@ -68,6 +126,28 @@ const mountLineChart = () => {
             };
           },
         });
+
+        if (index === 0 && !minPriceLine) {
+          line.createPriceLine({
+            price: 1,
+            color: "#be1238",
+            lineWidth: 1,
+            lineStyle: 1,
+            axisLabelVisible: true,
+            title: "minimum",
+          });
+        }
+        if (index === 0 && !maxPriceLine) {
+          line.createPriceLine({
+            price: 5,
+            color: "#be1238",
+            lineWidth: 1,
+            lineStyle: 1,
+            axisLabelVisible: true,
+            title: "maximum",
+          });
+        }
+
         lines.push(line);
       }
 
@@ -95,27 +175,13 @@ const Controller: FunctionComponent = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="w-full h-10 border-b shrink-0">
-        <Button
-          onClick={async () => {
-            if (mode === "idle") {
-              await window.backend.controller.setMode("charge");
-              setMode("charge");
-            } else {
-              await window.backend.controller.setMode("idle");
-              setMode("idle");
-            }
-          }}
-        >
-          Set mode to {mode === "idle" ? "charge" : "idle"}
-        </Button>
-      </header>
+      <header className="w-full h-10 border-b shrink-0"></header>
       <div className="w-full h-full flex">
         <aside className="shrink-0 w-16 border-r">{/* sb */}</aside>
         <div className="flex flex-col w-full">
-          <main className="grow">
-            <div id="barchart" className="w-full h-1/2" />
-            <div id="linechart" className="w-full h-1/2" />
+          <main className="grow p-4 flex flex-col">
+            <div id="barchart" className="grow shrink-0 h-1/2" />
+            <div id="linechart" className="grow shrink-0 h-1/2" />
           </main>
           <footer className="shrink-0 w-full h-8 border-t text-xs flex items-center justify-between px-2">
             <div>&copy; BotsoCorp 2023</div>

@@ -14,7 +14,7 @@ export class BoardController {
   private _board?: Board;
 
   private _chargingMode: ChargingMode = "idle";
-  private _readInterval: number = 5000;
+  private _readInterval: number = 200;
   private _minCharge: number = 200;
   private _maxCharge: number = 1000;
   private _subscriberKey = 0;
@@ -32,6 +32,7 @@ export class BoardController {
         console.log("waiting for voltages");
         try {
           this._voltages = await this._board.read();
+          console.log(this._voltages);
           this._notify();
         } catch (e) {
           if (e instanceof Error) console.log(e.message);

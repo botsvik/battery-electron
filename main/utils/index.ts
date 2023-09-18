@@ -1,5 +1,5 @@
-export { default as createWindow } from "./createWindow";
-export { default as getWindowRect } from "./getWindowRect";
-export { default as isDev } from "./isDev";
-export { default as noop } from "./noop";
-export { default as sleep } from "./sleep";
+export { View } from "./View";
+export { getWindowRect } from "./getWindowRect";
+export { isDev } from "./isDev";
+export { noop } from "./noop";
+export { sleep } from "./sleep";

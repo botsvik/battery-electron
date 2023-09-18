@@ -1,6 +1,6 @@
 import { BrowserWindow, Rectangle } from "electron";
 
-const getWindowRect = (window: BrowserWindow): Rectangle => {
+export const getWindowRect = (window: BrowserWindow): Rectangle => {
   const position = window.getPosition();
   const size = window.getSize();
   return {
@@ -10,5 +10,3 @@ const getWindowRect = (window: BrowserWindow): Rectangle => {
     height: size[1],
   };
 };
-
-export default getWindowRect;

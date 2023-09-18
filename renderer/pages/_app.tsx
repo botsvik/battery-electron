@@ -1,12 +1,14 @@
 import type { AppProps } from "next/app";
-import { NextUIProvider } from "@nextui-org/react";
 
-import "../styles/globals.css";
+import { inter } from "@renderer/styles/fonts";
+import "@renderer/styles/globals.css";
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <NextUIProvider>
+    <div className={`${inter.variable} font-sans`}>
       <Component {...pageProps} />
-    </NextUIProvider>
+    </div>
   );
-}
+};
+
+export default App;

@@ -21,7 +21,8 @@
     "plugins": [{ "transform": "typescript-transform-paths" }],
     "baseUrl": ".",
     "paths": {
-      "@main/*": ["./*"]
+      "@main/*": ["./*"],
+      "@renderer/*": ["../renderer/*"]
     }
   },
   "exclude": ["node_modules", "build"],
