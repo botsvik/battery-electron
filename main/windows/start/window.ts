@@ -5,8 +5,8 @@ import { View } from "@main/utils";
 import { ProjectWindow } from "../project/window";
 
 export interface StartWindowApiInterface {
-  createProject(path: string): Promise<void>;
-  loadProject(path?: string): Promise<void>;
+  createProject(): Promise<void>;
+  loadProject(projectFilePath?: string): Promise<void>;
 }
 
 export class StartWindow {
@@ -53,7 +53,7 @@ export class StartWindow {
       startWindow.close();
     });
 
-    ipc.handle("loadProject", async (_, ...[projectFilePath]: [string, ...any]) => {
+    ipc.handle("loadProject", async (_, ...[projectFilePath]: [string?]) => {
       if (!projectFilePath) {
         const result = await dialog.showOpenDialog({
           defaultPath: app.getPath("documents"),
