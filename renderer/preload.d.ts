@@ -1,7 +1,7 @@
-import { Backend } from "@main/preload";
+import { StartWindowApiInterface, ProjectWindowApiInterface } from "@main/windows";
 
 declare global {
   interface Window {
-    backend: Backend;
+    api: StartWindowApiInterface & ProjectWindowApiInterface;
   }
 }

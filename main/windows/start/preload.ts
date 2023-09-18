@@ -1,11 +1,13 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { StartWindowApiInterface } from "./window";
 
-const serialport = {
-  list: async () => await ipcRenderer.invoke("serialport:list"),
+const api: StartWindowApiInterface = {
+  async createProject(path: string) {
+    return await ipcRenderer.invoke("createProject", path);
+  },
+  async loadProject() {
+    return await ipcRenderer.invoke("loadProject");
+  }
 };
 
-const backend = {
-  serialport,
-};
-
-contextBridge.exposeInMainWorld("backend", backend);
+contextBridge.exposeInMainWorld("api", api);

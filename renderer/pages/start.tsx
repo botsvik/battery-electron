@@ -18,7 +18,7 @@ const Start: FunctionComponent = () => {
         </Button>
         <Button
           onClick={() => {
-            window.backend.serialport.list();
+            window.api.loadProject();
           }}
         >
           <IconFileImport className="mr-2 h-4 w-4" />
