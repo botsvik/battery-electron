@@ -2,7 +2,6 @@ import path from "node:path";
 import fs from "node:fs/promises";
 
 import { app, BrowserWindow, dialog } from "electron";
-import Database from "better-sqlite3";
 
 import { View } from "@main/utils";
 import { ProjectWindow } from "../project/window";
@@ -38,7 +37,7 @@ export class StartWindow {
     const ipc = startWindow.webContents.ipc;
 
     ipc.handle("createProject", async () => {
-      const result = await dialog.showSaveDialog({
+      const result = await dialog.showSaveDialog(startWindow, {
         defaultPath: app.getPath("documents"),
         properties: ["createDirectory", "showOverwriteConfirmation"],
         filters: [
@@ -50,22 +49,15 @@ export class StartWindow {
       });
 
       if (result.canceled || !result.filePath) return;
-      const projectFilePath = result.filePath; // create empty project db file
+      const projectFilePath = result.filePath;
 
       try {
+        // create empty project sqlite db file
         await fs.access(projectFilePath, fs.constants.F_OK);
         await fs.rm(projectFilePath);
       } catch {
         // File does not exist
       }
-
-      const db = new Database(projectFilePath, {
-        verbose: console.log,
-        fileMustExist: true,
-      });
-
-      const x = db.prepare("PRAGMA user_version").get();
-      console.log(x);
 
       await ProjectWindow.create(projectFilePath);
       startWindow.close();
@@ -73,7 +65,7 @@ export class StartWindow {
 
     ipc.handle("loadProject", async (_, ...[projectFilePath]: [string?]) => {
       if (!projectFilePath) {
-        const result = await dialog.showOpenDialog({
+        const result = await dialog.showOpenDialog(startWindow, {
           defaultPath: app.getPath("documents"),
           properties: ["openFile"],
           filters: [

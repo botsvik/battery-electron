@@ -3,27 +3,30 @@ import { BrowserWindow } from "electron";
 
 import { View } from "@main/utils";
 
+import { Project } from "@main/services/project/Project";
+
 export interface ProjectWindowApiInterface {
   //
 }
 
 export class ProjectWindow {
   static async create(projectFilePath: string) {
-    const window = new BrowserWindow({
+    const project = await Project.create(projectFilePath);
+
+    const projectWindow = new BrowserWindow({
       width: 1024,
       height: 728,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
     });
-    window.setRepresentedFilename(projectFilePath);
 
-    window.loadURL(View.url("project"));
-    window.once("ready-to-show", () => window.show());
+    projectWindow.loadURL(View.url("project"));
+    projectWindow.once("ready-to-show", () => projectWindow.show());
 
     /**
      * Scoped ipc definitions
      */
-    const ipc = window.webContents.ipc;
+    const ipc = projectWindow.webContents.ipc;
   }
 }

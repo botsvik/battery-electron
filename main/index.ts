@@ -6,11 +6,11 @@ import { StartWindow } from "@main/windows";
 // Run static file server
 View.serve();
 
-app.on("ready", () => StartWindow.create());
-app.on("activate", () => {
+app.on("ready", async () => await StartWindow.create());
+app.on("activate", async () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) StartWindow.create();
+  if (BrowserWindow.getAllWindows().length === 0) await StartWindow.create();
 });
 app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even
