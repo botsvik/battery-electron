@@ -1,5 +1,8 @@
-import path from "path";
+import path from "node:path";
+import fs from "node:fs/promises";
+
 import { app, BrowserWindow, dialog } from "electron";
+import Database from "better-sqlite3";
 
 import { View } from "@main/utils";
 import { ProjectWindow } from "../project/window";
@@ -47,8 +50,23 @@ export class StartWindow {
       });
 
       if (result.canceled || !result.filePath) return;
-
       const projectFilePath = result.filePath; // create empty project db file
+
+      try {
+        await fs.access(projectFilePath, fs.constants.F_OK);
+        await fs.rm(projectFilePath);
+      } catch {
+        // File does not exist
+      }
+
+      const db = new Database(projectFilePath, {
+        verbose: console.log,
+        fileMustExist: true,
+      });
+
+      const x = db.prepare("PRAGMA user_version").get();
+      console.log(x);
+
       await ProjectWindow.create(projectFilePath);
       startWindow.close();
     });
