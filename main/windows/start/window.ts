@@ -24,6 +24,12 @@ export class StartWindow {
       show: false,
       maximizable: false,
       autoHideMenuBar: true,
+      titleBarStyle: "hidden",
+      titleBarOverlay: {
+        color: "#ffffff",
+        symbolColor: "#0a0a0a",
+        // height: 30
+      },
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
