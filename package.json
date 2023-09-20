@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build-renderer": "next build renderer",
-    "build-main": "rimraf ./build/main && tspc --project ./main/tsconfig.json && copyfiles -u 1 ./main/services/project/migrations/*.sql ./build/main",
+    "build-main": "rimraf ./build/main && tspc --project ./main/tsconfig.json && copyfiles -u 1 ./main/**/*.sql ./build/main",
     "build": "yarn build-renderer && yarn build-main",
     "dev-renderer": "next dev renderer -p 8080",
     "dev-main": "yarn build-main && cross-env NODE_ENV=\"development\" electron ./build/main/index.js",

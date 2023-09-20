@@ -99,68 +99,68 @@ const mountLineChart = () => {
   let minPriceLine: IPriceLine;
   const lines: ISeriesApi<"Line">[] = [];
 
-  const unsubscribe = window.backend.controller.handleVoltageUpdate((voltages) => {
-    // voltages = [voltages[0]];
-    const time = (Date.now() / 1000) as UTCTimestamp;
-    voltages.forEach((value, index) => {
-      let line = lines[index];
-      if (!line) {
-        line = chart.addLineSeries({
-          lastValueVisible: false,
-          // crosshairMarkerVisible: false,
-          crosshairMarkerBorderWidth: 0,
-          priceLineVisible: false,
-          lineType: 0,
-          lineWidth: 1,
-          color: colors[index],
-          autoscaleInfoProvider: () => {
-            return {
-              margins: {
-                above: 0,
-                below: 0,
-              },
-              priceRange: {
-                minValue: 0,
-                maxValue: 5,
-              },
-            };
-          },
-        });
+  // const unsubscribe = window.backend.controller.handleVoltageUpdate((voltages) => {
+  //   // voltages = [voltages[0]];
+  //   const time = (Date.now() / 1000) as UTCTimestamp;
+  //   voltages.forEach((value, index) => {
+  //     let line = lines[index];
+  //     if (!line) {
+  //       line = chart.addLineSeries({
+  //         lastValueVisible: false,
+  //         // crosshairMarkerVisible: false,
+  //         crosshairMarkerBorderWidth: 0,
+  //         priceLineVisible: false,
+  //         lineType: 0,
+  //         lineWidth: 1,
+  //         color: colors[index],
+  //         autoscaleInfoProvider: () => {
+  //           return {
+  //             margins: {
+  //               above: 0,
+  //               below: 0,
+  //             },
+  //             priceRange: {
+  //               minValue: 0,
+  //               maxValue: 5,
+  //             },
+  //           };
+  //         },
+  //       });
 
-        if (index === 0 && !minPriceLine) {
-          line.createPriceLine({
-            price: 1,
-            color: "#be1238",
-            lineWidth: 1,
-            lineStyle: 1,
-            axisLabelVisible: true,
-            title: "minimum",
-          });
-        }
-        if (index === 0 && !maxPriceLine) {
-          line.createPriceLine({
-            price: 5,
-            color: "#be1238",
-            lineWidth: 1,
-            lineStyle: 1,
-            axisLabelVisible: true,
-            title: "maximum",
-          });
-        }
+  //       if (index === 0 && !minPriceLine) {
+  //         line.createPriceLine({
+  //           price: 1,
+  //           color: "#be1238",
+  //           lineWidth: 1,
+  //           lineStyle: 1,
+  //           axisLabelVisible: true,
+  //           title: "minimum",
+  //         });
+  //       }
+  //       if (index === 0 && !maxPriceLine) {
+  //         line.createPriceLine({
+  //           price: 5,
+  //           color: "#be1238",
+  //           lineWidth: 1,
+  //           lineStyle: 1,
+  //           axisLabelVisible: true,
+  //           title: "maximum",
+  //         });
+  //       }
 
-        lines.push(line);
-      }
+  //       lines.push(line);
+  //     }
 
-      line.update({
-        value,
-        time,
-      });
-    });
-  });
+  //     line.update({
+  //       value,
+  //       time,
+  //     });
+  //   });
+  // });
 
   return () => {
     window.removeEventListener("resize", resizeHandler);
-    unsubscribe();
+    // unsubscribe();
     chart.remove();
   };
 };

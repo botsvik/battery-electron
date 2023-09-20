@@ -16,6 +16,7 @@ export class ProjectWindow {
     const projectWindow = new BrowserWindow({
       width: 1024,
       height: 728,
+      show: false,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },

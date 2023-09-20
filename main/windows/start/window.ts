@@ -9,6 +9,7 @@ import { ProjectWindow } from "../project/window";
 export interface StartWindowApiInterface {
   createProject(): Promise<void>;
   loadProject(projectFilePath?: string): Promise<void>;
+  listRecentProjects(): Promise<any>;
 }
 
 export class StartWindow {
@@ -28,7 +29,7 @@ export class StartWindow {
       },
     });
 
-    startWindow.loadURL(View.url("start"));
+    startWindow.loadURL(View.url("start", { test: "param" }));
     startWindow.once("ready-to-show", () => startWindow.show());
 
     /**
@@ -52,17 +53,14 @@ export class StartWindow {
       const projectFilePath = result.filePath;
 
       try {
-        // create empty project sqlite db file
-        await fs.access(projectFilePath, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
         await fs.unlink(projectFilePath);
       } catch (e) {
+        console.error(e);
         if (e instanceof Error && "code" in e && typeof e.code === "string") {
           if (e.code === "EBUSY") {
             return;
           }
         }
-        console.log(e);
-        // File does not exist
       }
 
       await ProjectWindow.create(projectFilePath);
