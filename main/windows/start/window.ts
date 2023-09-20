@@ -53,9 +53,15 @@ export class StartWindow {
 
       try {
         // create empty project sqlite db file
-        await fs.access(projectFilePath, fs.constants.F_OK);
-        await fs.rm(projectFilePath);
-      } catch {
+        await fs.access(projectFilePath, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
+        await fs.unlink(projectFilePath);
+      } catch (e) {
+        if (e instanceof Error && "code" in e && typeof e.code === "string") {
+          if (e.code === "EBUSY") {
+            return;
+          }
+        }
+        console.log(e);
         // File does not exist
       }
 

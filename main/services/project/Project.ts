@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import * as sqlite from "sqlite";
 
 const APPLICATION_ID = 0xffff; // Determines sqlite db belongs to this application
-const MIGRATION_HISTORY_TABLE = "__migration_history";
+const MIGRATION_HISTORY_TABLE = "__MigrationHistiry";
 
 export class Project {
   static async create(projectFilePath: string) {
@@ -20,6 +20,7 @@ export class Project {
 
   private constructor(private readonly _db: sqlite.Database) {
     this._db.get("PRAGMA user_version").then(console.log);
-    this._db.get("SELECT * FROM Category").then(console.log);
+    this._db.get("SELECT * FROM Settings").then(console.log);
+    this._db.all("SELECT * FROM VoltageHistory").then(console.log);
   }
 }
