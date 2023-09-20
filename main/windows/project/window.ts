@@ -1,9 +1,9 @@
 import path from "node:path";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, app } from "electron";
 
 import { View } from "@main/utils";
 
-import { Project } from "@main/services/project/Project";
+import { Project } from "@main/services/project";
 
 export interface ProjectWindowApiInterface {
   //
@@ -24,6 +24,9 @@ export class ProjectWindow {
 
     projectWindow.loadURL(View.url("project"));
     projectWindow.once("ready-to-show", () => projectWindow.show());
+    projectWindow.once("show", () => {
+      app.addRecentDocument(projectFilePath);
+    });
 
     /**
      * Scoped ipc definitions

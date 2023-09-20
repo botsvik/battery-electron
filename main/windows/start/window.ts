@@ -9,7 +9,7 @@ import { ProjectWindow } from "../project/window";
 export interface StartWindowApiInterface {
   createProject(): Promise<void>;
   loadProject(projectFilePath?: string): Promise<void>;
-  listRecentProjects(): Promise<any>;
+  // listRecentProjects(): Promise<any>;
 }
 
 export class StartWindow {
@@ -40,7 +40,7 @@ export class StartWindow {
     ipc.handle("createProject", async () => {
       const result = await dialog.showSaveDialog(startWindow, {
         defaultPath: app.getPath("documents"),
-        properties: ["createDirectory", "showOverwriteConfirmation"],
+        properties: ["createDirectory", "showOverwriteConfirmation", "dontAddToRecent"],
         filters: [
           {
             extensions: ["badb"],
@@ -71,7 +71,7 @@ export class StartWindow {
       if (!projectFilePath) {
         const result = await dialog.showOpenDialog(startWindow, {
           defaultPath: app.getPath("documents"),
-          properties: ["openFile"],
+          properties: ["openFile", "dontAddToRecent"],
           filters: [
             {
               extensions: ["badb"],

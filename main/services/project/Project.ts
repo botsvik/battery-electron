@@ -6,6 +6,8 @@ const APPLICATION_ID = 0xffff; // Determines sqlite db belongs to this applicati
 const MIGRATION_HISTORY_TABLE = "__MigrationHistiry";
 
 export class Project {
+  private readonly _db: sqlite.Database;
+
   static async create(projectFilePath: string) {
     const db = await sqlite.open({
       filename: projectFilePath,
@@ -15,10 +17,13 @@ export class Project {
       table: MIGRATION_HISTORY_TABLE,
       migrationsPath: path.join(__dirname, "migrations"),
     });
+
     return new Project(db);
   }
 
-  private constructor(private readonly _db: sqlite.Database) {
+  private constructor(db: sqlite.Database) {
+    this._db = db;
+
     this._db.get("PRAGMA user_version").then(console.log);
     this._db.get("SELECT * FROM Settings").then(console.log);
     this._db.all("SELECT * FROM VoltageHistory").then(console.log);
