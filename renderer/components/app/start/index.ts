@@ -1,1 +1,1 @@
-export { RecentProjectsList } from "./RecentProjectsList/RecentProjectsList";
+export { RecentDocumentsList } from "./RecentDocuments/RecentDocumentsList";

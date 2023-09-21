@@ -4,12 +4,18 @@ import fs from "node:fs/promises";
 import { app, BrowserWindow, dialog } from "electron";
 
 import { View } from "@main/utils";
+import {
+  UserPreferences,
+  RecentDocument,
+} from "@main/services/user-preferences";
+
 import { ProjectWindow } from "../project/window";
 
 export interface StartWindowApiInterface {
   createProject(): Promise<void>;
   loadProject(projectFilePath?: string): Promise<void>;
-  // listRecentProjects(): Promise<any>;
+  getRecentDocuments(): Promise<Array<RecentDocument>>;
+  removeRecentDocument(path: string): Promise<void>;
 }
 
 export class StartWindow {
@@ -22,7 +28,11 @@ export class StartWindow {
       show: false,
       autoHideMenuBar: true,
       titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
-      titleBarOverlay: true,
+      titleBarOverlay: {
+        // theme-light
+        color: "#171717", // hsl(0 0% 9%)
+        symbolColor: "#fafafa", // hsl(0 0% 98%)
+      },
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
@@ -39,7 +49,11 @@ export class StartWindow {
     ipc.handle("createProject", async () => {
       const result = await dialog.showSaveDialog(startWindow, {
         defaultPath: app.getPath("documents"),
-        properties: ["createDirectory", "showOverwriteConfirmation", "dontAddToRecent"],
+        properties: [
+          "createDirectory",
+          "showOverwriteConfirmation",
+          "dontAddToRecent",
+        ],
         filters: [
           {
             extensions: ["badb"],
@@ -86,8 +100,12 @@ export class StartWindow {
       startWindow.close();
     });
 
-    ipc.handle("listRecentProjects", async (event) => {
-      console.log("scoped ipc handle");
+    ipc.handle("getRecentDocuments", async (event) => {
+      return await UserPreferences.getRecentDocuments();
+    });
+
+    ipc.handle("removeRecentDocument", async (event, ...[path]: [string]) => {
+      return await UserPreferences.removeRecentDocument(path);
     });
 
     ipc.handle("pinRecentProject", async (event) => {

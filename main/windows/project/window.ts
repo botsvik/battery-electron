@@ -4,6 +4,7 @@ import { BrowserWindow, app } from "electron";
 import { View } from "@main/utils";
 
 import { Project } from "@main/services/project";
+import { UserPreferences } from "@main/services/user-preferences";
 
 export interface ProjectWindowApiInterface {
   //
@@ -24,8 +25,8 @@ export class ProjectWindow {
 
     projectWindow.loadURL(View.url("project"));
     projectWindow.once("ready-to-show", () => projectWindow.show());
-    projectWindow.once("show", () => {
-      app.addRecentDocument(projectFilePath);
+    projectWindow.once("show", async () => {
+      await UserPreferences.addRecentDocument(projectFilePath);
     });
 
     /**

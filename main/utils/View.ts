@@ -13,7 +13,10 @@ export class View {
     if (!isDev) serve({ directory: path.join(__dirname, "../../renderer") });
   }
 
-  static url(view: string, params?: ConstructorParameters<typeof URLSearchParams>[0]) {
+  static url(
+    view: string,
+    params?: ConstructorParameters<typeof URLSearchParams>[0],
+  ) {
     if (!isDev) {
       view += ".html";
     }

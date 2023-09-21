@@ -1,8 +1,8 @@
 import { FunctionComponent, useState } from "react";
+import { FileIcon, FilePlusIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@renderer/components/ui";
-import { IconFileImport, IconFilePlus } from "@tabler/icons-react";
-import { RecentProjectsList } from "@renderer/components/app/start";
+import { RecentDocumentsList } from "@renderer/components/app/start";
 
 const Start: FunctionComponent = () => {
   const [disabled, setDisabled] = useState(false);
@@ -20,23 +20,18 @@ const Start: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="h-titlebar region-drag" />
-      <div className="flex flex-col gap-4 p-4 pt-0.5 grow">
-      <section className="grow">
-        <h1 className="mb-4 font-semibold text-2xl">Get started</h1>
-        <RecentProjectsList title="Recent" />
-      </section>
-      <section className="flex shrink-0 justify-end gap-2">
+    <div className="flex flex-col grow overflow-hidden">
+      <h1 className="font-semibold text-2xl shrink-0 px-4 py-2">Get started</h1>
+      <RecentDocumentsList className="overflow-hidden grow" />
+      <div className="flex shrink-0 justify-end gap-2 p-4 border-t">
         <Button disabled={disabled} onClick={handleCreateProject}>
-          <IconFilePlus className="mr-2 h-4 w-4" />
+          <FilePlusIcon className="mr-2 h-4 w-4" />
           Create a new project
         </Button>
         <Button disabled={disabled} onClick={handleLoadProject}>
-          <IconFileImport className="mr-2 h-4 w-4" />
+          <FileIcon className="mr-2 h-4 w-4" />
           Open existing project
         </Button>
-      </section>
       </div>
     </div>
   );

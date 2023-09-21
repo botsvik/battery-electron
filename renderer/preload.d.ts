@@ -1,4 +1,7 @@
-import { StartWindowApiInterface, ProjectWindowApiInterface } from "@main/windows";
+import {
+  StartWindowApiInterface,
+  ProjectWindowApiInterface,
+} from "@main/windows";
 
 declare global {
   interface Window {

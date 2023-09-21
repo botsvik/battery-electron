@@ -24,7 +24,9 @@ export class Board {
        * To mitigate this we explicitly call `serialport.unpause()` method in the `data` event handler.
        * @see https://github.com/serialport/node-serialport/issues/2068
        */
-      const parser = serialport.pipe(new ReadyParser({ delimiter: [READY_BYTE] }));
+      const parser = serialport.pipe(
+        new ReadyParser({ delimiter: [READY_BYTE] }),
+      );
       parser.on("ready", () => resolve(new Board(serialport)));
     });
   }
@@ -127,6 +129,9 @@ export class Board {
    */
   async write(pin: number, value: "high" | "low") {
     pin = (pin & 0b00111111) << 1;
-    this._serialport.write([COMMAND_WRITE | pin | (value === "high" ? 0b1 : 0b0)], "binary");
+    this._serialport.write(
+      [COMMAND_WRITE | pin | (value === "high" ? 0b1 : 0b0)],
+      "binary",
+    );
   }
 }
