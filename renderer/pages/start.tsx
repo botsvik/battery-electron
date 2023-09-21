@@ -20,9 +20,11 @@ const Start: FunctionComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-screen w-full p-4">
+    <div className="flex flex-col h-screen">
+      <div className="h-titlebar region-drag" />
+      <div className="flex flex-col gap-4 p-4 pt-0.5 grow">
       <section className="grow">
-        <h1 className="mb-4 font-semibold">Get started</h1>
+        <h1 className="mb-4 font-semibold text-2xl">Get started</h1>
         <RecentProjectsList title="Recent" />
       </section>
       <section className="flex shrink-0 justify-end gap-2">
@@ -35,6 +37,7 @@ const Start: FunctionComponent = () => {
           Open existing project
         </Button>
       </section>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,14 @@
+{
+  "name": "Battery App",
+  "start_url": "/index.html",
+  "theme_color": "green",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "icons": [
+    {
+      "src": "icons/512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -32,5 +32,7 @@ export class ProjectWindow {
      * Scoped ipc definitions
      */
     const ipc = projectWindow.webContents.ipc;
+
+    return projectWindow;
   }
 }

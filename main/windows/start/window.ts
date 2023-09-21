@@ -15,21 +15,14 @@ export interface StartWindowApiInterface {
 export class StartWindow {
   static async create() {
     const startWindow = new BrowserWindow({
-      width: 800,
-      minWidth: 800,
-      maxWidth: 800,
-      height: 600,
-      minHeight: 600,
-      maxHeight: 600,
+      width: 700,
+      minWidth: 700,
+      height: 500,
+      minHeight: 500,
       show: false,
-      maximizable: false,
       autoHideMenuBar: true,
-      titleBarStyle: "hidden",
-      titleBarOverlay: {
-        color: "#ffffff",
-        symbolColor: "#0a0a0a",
-        // height: 30
-      },
+      titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
+      titleBarOverlay: true,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
