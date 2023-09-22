@@ -2,6 +2,7 @@ import { forwardRef, InputHTMLAttributes, SVGAttributes } from "react";
 
 import { cn } from "@renderer/utils";
 
+// TODO: Move somewhere else
 type IconProps = SVGAttributes<SVGElement> & {
   children?: never;
   color?: string;

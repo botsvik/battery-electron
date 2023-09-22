@@ -4,17 +4,24 @@ const KEY = "recentDocuments";
 type Data = Awaited<ReturnType<typeof window.api.getRecentDocuments>>;
 
 export const removeRecentDocument = (path: string) => {
-  mutate<Data>(KEY, (data) => {
-    if (!data) return data;
+  mutate<Data>(
+    KEY,
+    async (data) => {
+      await window.api.removeRecentDocument(path);
+      return data;
+    },
+    {
+      optimisticData: (data) => {
+        if (!data) return [];
 
-    const existsAtIndex = data.findIndex((rd) => rd.path === path);
-    if (existsAtIndex === -1) return data;
+        const existsAtIndex = data.findIndex((rd) => rd.path === path);
+        if (existsAtIndex === -1) return data;
+        data.splice(existsAtIndex, 1);
 
-    data.splice(existsAtIndex, 1);
-    window.api.removeRecentDocument(path);
-
-    return [...data];
-  });
+        return [...data];
+      },
+    },
+  );
 };
 
 export const pinRecentDocument = (path: string) => {

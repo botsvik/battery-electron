@@ -21,6 +21,7 @@ export class ProjectWindow {
       width: 1024,
       height: 728,
       show: false,
+      autoHideMenuBar: true,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
