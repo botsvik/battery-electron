@@ -1,18 +1,21 @@
 import path from "node:path";
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow } from "electron";
 
 import { View } from "@main/utils";
 
-import { Project } from "@main/services/project";
+import { Project, ProjectSettings, VoltageSeriesItem } from "@main/services/project";
 import { UserPreferences } from "@main/services/user-preferences";
+import { BoardController } from "@main/services/board";
 
 export interface ProjectWindowApiInterface {
-  //
+  getProjectSettings(): Promise<ProjectSettings>;
+  getVoltageSeries(from: number, to: number): Promise<VoltageSeriesItem>;
 }
 
 export class ProjectWindow {
   static async create(projectFilePath: string) {
     const project = await Project.create(projectFilePath);
+    const controller = new BoardController();
 
     const projectWindow = new BrowserWindow({
       width: 1024,
@@ -33,6 +36,14 @@ export class ProjectWindow {
      * Scoped ipc definitions
      */
     const ipc = projectWindow.webContents.ipc;
+
+    ipc.handle("getProjectSettings", async () => {
+      return await project.getSettings();
+    });
+
+    ipc.handle("getVoltageSeries", async (event, ...[from, to]: [number, number]) => {
+      return await project.getVoltageSeries(from, to);
+    });
 
     return projectWindow;
   }

@@ -1,1 +1,5 @@
-export { useRecentDocuments, removeRecentDocument, pinRecentDocument } from "./recentDocuments";
+export {
+  useRecentDocuments,
+  removeRecentDocument,
+  pinRecentDocument,
+} from "./recentDocuments";

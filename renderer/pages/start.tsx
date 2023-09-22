@@ -21,15 +21,15 @@ const Start: FunctionComponent = () => {
 
   return (
     <div className="flex flex-col grow overflow-hidden">
-      <h1 className="font-semibold text-2xl shrink-0 px-4 py-2">Get started</h1>
+      <h1 className="font-semibold text-2xl shrink-0 px-4 pt-2 pb-4">Open recent</h1>
       <RecentDocumentsList className="overflow-hidden grow" />
       <div className="flex shrink-0 justify-end gap-2 p-4 border-t">
         <Button disabled={disabled} onClick={handleCreateProject}>
-          <FilePlusIcon className="mr-2 h-4 w-4" />
+          <FilePlusIcon className="-ml-2 mr-2 h-5 w-5" />
           Create a new project
         </Button>
         <Button disabled={disabled} onClick={handleLoadProject}>
-          <FileIcon className="mr-2 h-4 w-4" />
+          <FileIcon className="-ml-2 mr-2 h-5 w-5" />
           Open existing project
         </Button>
       </div>

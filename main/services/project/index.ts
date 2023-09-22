@@ -1,1 +1,1 @@
-export { Project } from "./Project";
+export { Project, type ProjectSettings, type VoltageSeriesItem } from "./Project";

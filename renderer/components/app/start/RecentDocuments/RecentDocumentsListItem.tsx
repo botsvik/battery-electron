@@ -10,12 +10,9 @@ export type RecentDocumentsListItemProps = LiHTMLAttributes<HTMLLIElement> & {
   path: string;
 };
 
-export const RecentDocumentsListItem: FunctionComponent<RecentDocumentsListItemProps> = ({
-  title,
-  path,
-  className,
-  ...rest
-}) => {
+export const RecentDocumentsListItem: FunctionComponent<
+  RecentDocumentsListItemProps
+> = ({ title, path, className, ...rest }) => {
   const handleOpen: MouseEventHandler<HTMLLIElement> = async (event) => {
     await window.api.loadProject(path);
   };
@@ -39,7 +36,12 @@ export const RecentDocumentsListItem: FunctionComponent<RecentDocumentsListItemP
         <span className="font-medium">{title}</span>
         <span className="text-xs font-light text-muted-foreground">{path}</span>
       </div>
-      <Button variant="ghost" size="icon" className="hover" onClick={handleRemove}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="hover"
+        onClick={handleRemove}
+      >
         <Cross1Icon className="h-4 w-4" />
       </Button>
     </li>

@@ -14,8 +14,8 @@ INSERT INTO
 VALUES
   (1, NULL, 9600, NULL, NULL);
 
-CREATE TABLE VoltageHistory (
-  id INTEGER NOT NULL CONSTRAINT VoltageHistory_pk PRIMARY KEY,
+CREATE TABLE VoltageSeries (
+  id INTEGER NOT NULL CONSTRAINT VoltageSeries_pk PRIMARY KEY,
   batteryId INTEGER NOT NULL,
   value REAL NOT NULL,
   timestamp INTEGER NOT NULL DEFAULT (unixepoch('subsec') * 1000)
@@ -24,6 +24,6 @@ CREATE TABLE VoltageHistory (
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
-DROP TABLE VoltageHistory;
+DROP TABLE VoltageSeries;
 
 DROP TABLE Settings;

@@ -1,6 +1,5 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-
 import { app, BrowserWindow, dialog } from "electron";
 
 import { View } from "@main/utils";
@@ -21,18 +20,19 @@ export interface StartWindowApiInterface {
 export class StartWindow {
   static async create() {
     const startWindow = new BrowserWindow({
-      width: 700,
-      minWidth: 700,
-      height: 500,
-      minHeight: 500,
+      width: 600,
+      minWidth: 600,
+      height: 450,
+      minHeight: 450,
       show: false,
       autoHideMenuBar: true,
-      titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
-      titleBarOverlay: {
-        // theme-light
-        color: "#171717", // hsl(0 0% 9%)
-        symbolColor: "#fafafa", // hsl(0 0% 98%)
-      },
+      titleBarStyle: "hidden",
+      titleBarOverlay: true,
+      // titleBarOverlay: {
+      //   // theme-light
+      //   color: "#171717", // hsl(0 0% 9%)
+      //   symbolColor: "#fafafa", // hsl(0 0% 98%)
+      // },
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
@@ -71,7 +71,7 @@ export class StartWindow {
         console.error(e);
         if (e instanceof Error && "code" in e && typeof e.code === "string") {
           if (e.code === "EBUSY") {
-            return;
+            return; // TODO: show alert that file is busy
           }
         }
       }

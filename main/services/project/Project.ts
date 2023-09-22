@@ -5,6 +5,19 @@ import * as sqlite from "sqlite";
 const APPLICATION_ID = 0xffff; // Determines sqlite db belongs to this application
 const MIGRATION_HISTORY_TABLE = "__MigrationHistory";
 
+export type ProjectSettings = {
+  port: string | null;
+  baudRate: number;
+  minCharge: number | null;
+  maxCharge: number | null;
+};
+
+export type VoltageSeriesItem = {
+  batteryId: number;
+  value: number;
+  timestamp: number;
+};
+
 export class Project {
   private readonly _db: sqlite.Database;
 
@@ -24,9 +37,16 @@ export class Project {
 
   private constructor(db: sqlite.Database) {
     this._db = db;
+  }
 
-    this._db.get("PRAGMA user_version").then(console.log);
-    this._db.get("SELECT * FROM Settings").then(console.log);
-    this._db.all("SELECT * FROM VoltageHistory").then(console.log);
+  async getSettings() {
+    return (await this._db.get("SELECT * FROM Settings")) as ProjectSettings;
+  }
+
+  async getVoltageSeries(from: number, to: number) {
+    return (await this._db.all(
+      "SELECT * FROM VoltageSeries WHERE ? <= timestamp AND timestamp <= ?",
+      [from, to],
+    )) as VoltageSeriesItem[];
   }
 }

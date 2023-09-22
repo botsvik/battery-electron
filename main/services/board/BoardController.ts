@@ -22,14 +22,10 @@ export class BoardController {
   private _timer?: SetIntervalAsyncTimer<[]>;
   private _voltages: number[] = [];
 
-  constructor() {}
-
   async connect(port: string, baudRate = 9600) {
     this._board = await Board.create(port, baudRate);
-
     this._timer = setIntervalAsync(async () => {
       if (this._board) {
-        console.log("waiting for voltages");
         try {
           this._voltages = await this._board.read();
           console.log(this._voltages);

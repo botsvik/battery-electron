@@ -20,10 +20,12 @@ const store = new Store<UserPreferencesType>({ name: STORE_NAME });
 
 export class UserPreferences {
   static async getRecentDocuments() {
-    const recentDocuments = store.get("recentDocuments", []).map<RecentDocument>((x) => ({
-      ...x,
-      title: path.basename(x.path, path.extname(x.path)),
-    }));
+    const recentDocuments = store
+      .get("recentDocuments", [])
+      .map<RecentDocument>((x) => ({
+        ...x,
+        title: path.basename(x.path, path.extname(x.path)),
+      }));
 
     return orderBy(recentDocuments, (item) => item.timestamp, "desc");
   }

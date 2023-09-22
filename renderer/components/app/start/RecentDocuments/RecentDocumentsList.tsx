@@ -1,4 +1,4 @@
-import { FunctionComponent, HTMLAttributes, ChangeEventHandler, useState } from "react";
+import { FunctionComponent, HTMLAttributes, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 import { useRecentDocuments } from "@renderer/data";
@@ -23,24 +23,38 @@ export const RecentDocumentsList: FunctionComponent<RecentDocumentsListProps> = 
         <Input
           value={search}
           leadingIcon={MagnifyingGlassIcon}
-          placeholder="Search recent projects..."
+          placeholder="Search..."
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <ScrollArea className="grow px-4 pr-3 mr-1">
-        <ul>
-          {recentDocuments
-            .filter((rd) => rd.title.toLowerCase().includes(search.toLowerCase()))
-            .map((rd) => (
-              <RecentDocumentsListItem
-                className="first:mt-2 last:mb-2"
-                key={rd.path}
-                path={rd.path}
-                title={rd.title}
-              />
-            ))}
-        </ul>
-      </ScrollArea>
+
+      {recentDocuments.length === 0 && (
+        <div className="flex flex-col items-center justify-center grow text-muted-foreground text-xs p-4">
+          <span className="block mb-2">
+            As you use APPNAME, any projects you open will show up here for quick access.
+          </span>
+          <span>
+            You can pin anything you open frequently so it&apos;s always at the top of the list.
+          </span>
+        </div>
+      )}
+
+      {recentDocuments.length > 0 && (
+        <ScrollArea className="grow px-4 pr-3 mr-1">
+          <ul>
+            {recentDocuments
+              .filter((rd) => rd.title.toLowerCase().includes(search.toLowerCase()))
+              .map((rd) => (
+                <RecentDocumentsListItem
+                  className="first:mt-2 last:mb-2"
+                  key={rd.path}
+                  path={rd.path}
+                  title={rd.title}
+                />
+              ))}
+          </ul>
+        </ScrollArea>
+      )}
     </div>
   );
 };
