@@ -1,11 +1,10 @@
 import { FunctionComponent, MouseEventHandler, LiHTMLAttributes } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
-
+import { removeRecentDocument } from "@renderer/data";
 import { Button } from "@renderer/components/ui";
 import { cn } from "@renderer/utils";
-import { removeRecentDocument } from "@renderer/data";
 
-export type RecentDocumentsListItemProps = LiHTMLAttributes<HTMLLIElement> & {
+type RecentDocumentsListItemProps = LiHTMLAttributes<HTMLLIElement> & {
   title: string;
   path: string;
 };

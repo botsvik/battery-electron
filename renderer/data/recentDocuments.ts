@@ -1,10 +1,15 @@
 import useSWR, { mutate } from "swr";
+import { RecentDocument } from "@main/services/user-preferences";
 
-const KEY = "recentDocuments";
-type Data = Awaited<ReturnType<typeof window.api.getRecentDocuments>>;
+export const KEY = "RecentDocuments";
 
-export const removeRecentDocument = (path: string) => {
-  mutate<Data>(
+/**
+ *
+ * @param path
+ * @returns
+ */
+export const removeRecentDocument = async (path: string) => {
+  return await mutate<RecentDocument[]>(
     KEY,
     async (data) => {
       await window.api.removeRecentDocument(path);
@@ -24,14 +29,28 @@ export const removeRecentDocument = (path: string) => {
   );
 };
 
+/**
+ *
+ * @param path
+ */
 export const pinRecentDocument = (path: string) => {
   // TODO: implement
 };
 
+/**
+ * 
+ * @param path 
+ */
+export const unpinRecentDocument = (path: string) => {
+  // TODO: implement
+};
+
+/**
+ *
+ * @returns
+ */
 export const useRecentDocuments = () => {
-  const swr = useSWR(KEY, async () => {
+  return useSWR(KEY, async () => {
     return await window.api.getRecentDocuments();
   });
-
-  return { ...swr, removeRecentDocument, pinRecentDocument };
 };

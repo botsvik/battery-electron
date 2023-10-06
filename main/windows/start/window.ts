@@ -27,12 +27,12 @@ export class StartWindow {
       show: false,
       autoHideMenuBar: true,
       titleBarStyle: "hidden",
-      titleBarOverlay: true,
-      // titleBarOverlay: {
-      //   // theme-light
-      //   color: "#171717", // hsl(0 0% 9%)
-      //   symbolColor: "#fafafa", // hsl(0 0% 98%)
-      // },
+      // titleBarOverlay: true,
+      titleBarOverlay: {
+        // theme-light
+        color: "#171717", // hsl(0 0% 9%)
+        symbolColor: "#fafafa", // hsl(0 0% 98%)
+      },
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
